@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gitcheckerapp.HomeController">
+   <children>
+      <AnchorPane prefHeight="500.0" prefWidth="230.0" style="-fx-background-color: Black;">
+         <children>
+            <Pane prefHeight="80.0" prefWidth="230.0" style="-fx-background-color: black;">
+               <children>
+                  <Label layoutX="25.0" layoutY="23.0" text="GITChecker" textFill="#26a65b">
+                     <font>
+                        <Font name="SF Pro Display Regular" size="28.0" />
+                     </font>
+                     <graphic>
+                        <MaterialDesignIconView fill="#26a65b" glyphName="GITHUB_BOX" size="34" />
+                     </graphic>
+                  </Label>
+               </children>
+            </Pane>
+            <JFXButton fx:id="stateButton" alignment="BASELINE_LEFT" graphicTextGap="12.0" layoutX="23.0" layoutY="75.0" onAction="#stateButtonClicked" prefHeight="50.0" prefWidth="207.0" text="Stav" textFill="WHITE">
+               <font>
+                  <Font name="SF UI Display Medium" size="14.0" />
+               </font>
+               <graphic>
+                  <MaterialDesignIconView fill="WHITE" glyphName="HOME" size="24.0" />
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="filesButton" alignment="BASELINE_LEFT" graphicTextGap="12.0" layoutX="23.0" layoutY="125.0" onAction="#filesButtonClicked" prefHeight="50.0" prefWidth="207.0" text="Soubory" textFill="WHITE">
+               <font>
+                  <Font name="SF UI Display Medium" size="14.0" />
+               </font>
+               <graphic>
+                  <MaterialDesignIconView fill="WHITE" glyphName="FILE" size="22.0" />
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="repositoryButton" alignment="BASELINE_LEFT" graphicTextGap="12.0" layoutX="23.0" layoutY="175.0" onAction="#repositoryButtonClicked" prefHeight="50.0" prefWidth="207.0" text="Repozitář" textFill="WHITE">
+               <font>
+                  <Font name="SF UI Display Medium" size="14.0" />
+               </font>
+               <graphic>
+                  <MaterialDesignIconView fill="WHITE" glyphName="ARCHIVE" size="22.0" />
+               </graphic>
+            </JFXButton>
+            <Pane layoutY="466.0" prefHeight="34.0" prefWidth="230.0" style="-fx-background-color: black;">
+               <children>
+                  <Label layoutX="26.0" layoutY="10.0" text="© 2018 Fengl, Kratochvíl, Vosecký" textFill="#dadfe1">
+                     <font>
+                        <Font name="SF Pro Display Medium" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="230.0" prefHeight="500.0" prefWidth="471.0">
+         <children>
+            <Pane fx:id="repositoryPane" prefHeight="500.0" prefWidth="471.0" style="-fx-background-color: WHITE;">
+               <children>
+                  <JFXTextField layoutX="190.0" layoutY="183.0" prefHeight="27.0" prefWidth="257.0" />
+                  <JFXTextField layoutX="190.0" layoutY="237.0" prefHeight="27.0" prefWidth="257.0" />
+                  <Label layoutX="23.0" layoutY="188.0" text="GIT repozitář (HTTPS):" />
+                  <Label layoutX="23.0" layoutY="242.0" text="Složka pro ukládání dat:" />
+                  <JFXButton layoutX="345.0" layoutY="288.0" text="Vybrat složku" />
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="230.0" prefHeight="500.0" prefWidth="471.0">
+         <children>
+            <Pane fx:id="filesPane" prefHeight="500.0" prefWidth="471.0" style="-fx-background-color: WHITE;">
+               <children>
+                  <JFXTreeTableView fx:id="table" layoutX="6.0" layoutY="9.0" prefHeight="480.0" prefWidth="458.0" />
+               </children>
+            </Pane>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="230.0" prefHeight="500.0" prefWidth="471.0">
+         <children>
+            <Pane fx:id="statePane" prefHeight="500.0" prefWidth="471.0" style="-fx-background-color: WHITE;">
+               <children>
+                  <MaterialDesignIconView fx:id="iconCheck" fill="#2ecc71" glyphName="CHECK" layoutX="171.0" layoutY="273.0" size="130" wrappingWidth="128.0" />
+                  <Label fx:id="internetConnectionLabel" layoutX="159.0" layoutY="314.0" text="Jste připojeni k internetu" />
+                  <Label fx:id="nextControlLabel" layoutX="159.0" layoutY="331.0" text="Další kontrola za: " />
+                  <MaterialDesignIconView fx:id="iconCross" fill="#ee3737" glyphName="CLOSE" layoutX="165.0" layoutY="276.0" size="140" wrappingWidth="140.25146551057696" />
+               </children></Pane>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

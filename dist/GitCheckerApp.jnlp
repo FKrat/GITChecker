@@ -8,13 +8,13 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="GitCheckerApp.jar" size="2813" download="eager" />
+    <jar href="GitCheckerApp.jar" size="5002" download="eager" />
     <jar href="lib/fontawesomefx-8.8.jar" size="443326" download="eager" />
     <jar href="lib/jfoenix-8.0.1.jar" size="2405715" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="GitCheckerApp" >
     <param name="requiredFXVersion" value="8.0+"/>
   </applet-desc>
-  <jfx:javafx-desc  width="800" height="600" main-class="gitcheckerapp.GitCheckerApp"  name="GitCheckerApp" />
+  <jfx:javafx-desc  width="800" height="600" main-class="main.java.gitcheckerapp.GitCheckerApp"  name="GitCheckerApp" />
   <update check="always"/>
 </jnlp>
