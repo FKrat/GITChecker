@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package gitcheckerapp;
-import java.net.URL;
-import java.nio.file.Paths;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,13 +18,14 @@ public class GitCheckerApp extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        URL path = Paths.get("./src/main/resources/gitcheckerapp/Home.fxml").toUri().toURL();
-        Parent root = FXMLLoader.load(path);
+       // URL path = Paths.get("./src/main/resources/gitcheckerapp/Home.fxml").toUri().toURL();
+        Parent root = FXMLLoader.load(getClass().getResource("Home.fxml"));
         
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
         stage.setTitle("GitChecker");
+        stage.setResizable(false);
         stage.show();
     }
 
