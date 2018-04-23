@@ -6,7 +6,6 @@
 package gitcheckerapp.gitcheckerInterface;
 
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import gitcheckerapp.gitcheckerLogic.ChangedFile;
 
 import java.io.IOException;
@@ -27,13 +26,13 @@ public interface IGitcheckerLogic{
 
     String getRepositoryPath();
 
-    LocalTime nextDownloadTime();
-
-    ArrayList<ChangedFile>getChangedFilesList(String owner, String repoName) throws IOException;
+    ArrayList<ChangedFile>getChangedFilesList(String owner, String repoName) throws IOException, ClassNotFoundException;
     
     void exportDataToExcel(String path) throws java.io.IOException;
 
     ArrayList<Integer> getDataForGraph(int fileIndex) throws IOException;
     
     void downloadFile(String path, int fileIndex) throws IOException;
+    
+    int getAllFilesLineNo();
 }

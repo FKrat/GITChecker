@@ -25,20 +25,20 @@
                   </Label>
                </children>
             </Pane>
-            <JFXButton fx:id="stateButton" alignment="BASELINE_LEFT" graphicTextGap="12.0" layoutX="23.0" layoutY="75.0" onAction="#stateButtonClicked" prefHeight="50.0" prefWidth="207.0" text="Stav" textFill="WHITE">
-               <font>
-                  <Font name="SF UI Display Medium" size="14.0" />
-               </font>
-               <graphic>
-                  <MaterialDesignIconView fill="WHITE" glyphName="HOME" size="24.0" />
-               </graphic>
-            </JFXButton>
             <JFXButton fx:id="filesButton" alignment="BASELINE_LEFT" graphicTextGap="12.0" layoutX="23.0" layoutY="125.0" onAction="#filesButtonClicked" prefHeight="50.0" prefWidth="207.0" text="Soubory" textFill="WHITE">
                <font>
                   <Font name="SF UI Display Medium" size="14.0" />
                </font>
                <graphic>
                   <MaterialDesignIconView fill="WHITE" glyphName="FILE" size="22.0" />
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="stateButton" alignment="BASELINE_LEFT" graphicTextGap="12.0" layoutX="23.0" layoutY="75.0" onAction="#stateButtonClicked" prefHeight="50.0" prefWidth="207.0" text="Stav" textFill="WHITE">
+               <font>
+                  <Font name="SF UI Display Medium" size="14.0" />
+               </font>
+               <graphic>
+                  <MaterialDesignIconView fill="WHITE" glyphName="HOME" size="24.0" />
                </graphic>
             </JFXButton>
             <JFXButton fx:id="repositoryButton" alignment="BASELINE_LEFT" graphicTextGap="12.0" layoutX="23.0" layoutY="175.0" onAction="#repositoryButtonClicked" prefHeight="50.0" prefWidth="207.0" text="Repozitář" textFill="WHITE">
@@ -51,21 +51,21 @@
             </JFXButton>
             <Pane layoutY="504.0" prefHeight="34.0" prefWidth="230.0" style="-fx-background-color: black;">
                <children>
-                  <Label layoutX="31.0" layoutY="10.0" text="© 2018 Fengl, Kratochvíl, Vosecký" textFill="#dadfe1">
+                  <Label layoutX="14.0" layoutY="10.0" text="© 2018 Fengl, Kratochvíl, Vosecký" textFill="#dadfe1">
                      <font>
                         <Font name="SF Pro Display Medium" size="12.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
-            <MaterialDesignIconView fx:id="iconCrossSmall" fill="#ee3737" glyphName="CLOSE" layoutX="79.0" layoutY="407.0" size="70" wrappingWidth="71.25146551057696" />
-            <MaterialDesignIconView fx:id="iconCheckSmall" fill="#2ecc71" glyphName="CHECK" layoutX="79.0" layoutY="407.0" size="70" wrappingWidth="61.0" />
-            <Label fx:id="internetConnectionLabelSmall" layoutX="44.0" layoutY="416.0" text="Jste připojeni k internetu" textFill="#dadfe1">
+            <MaterialDesignIconView fx:id="iconCrossSmall" fill="#ee3737" glyphName="CLOSE" layoutX="159.0" layoutY="444.0" size="40" wrappingWidth="40.00001102685928" />
+            <MaterialDesignIconView fx:id="iconCheckSmall" fill="#2ecc71" glyphName="CHECK" layoutX="159.0" layoutY="444.0" size="40" wrappingWidth="40.0" />
+            <Label fx:id="internetConnectionLabelSmall" layoutX="23.0" layoutY="421.0" text="Připojení k internetu:" textFill="#dadfe1">
                <font>
                   <Font size="12.0" />
                </font>
             </Label>
-            <Label fx:id="nextControlLabelSmall" layoutX="44.0" layoutY="442.0" text="Další kontrola za: " textFill="#dadfe1">
+            <Label fx:id="nextControlLabelSmall" layoutX="23.0" layoutY="452.0" text="Další kontrola za: " textFill="#dadfe1">
                <font>
                   <Font size="12.0" />
                </font>
@@ -83,20 +83,9 @@
                </children></Pane>
             <Pane fx:id="repositoryPane" prefHeight="547.0" prefWidth="595.0" style="-fx-background-color: WHITE;">
                <children>
-                  <JFXTextField fx:id="repositoryName" layoutX="209.0" layoutY="162.0" prefHeight="27.0" prefWidth="347.0" />
-                  <JFXTextField layoutX="210.0" layoutY="304.0" prefHeight="27.0" prefWidth="347.0" />
-                  <Label layoutX="49.0" layoutY="173.0" text="GIT repozitář (HTTPS):" />
-                  <Label layoutX="46.0" layoutY="315.0" text="Složka pro ukládání dat:" />
-                  <AnchorPane layoutX="405.0" layoutY="353.0" prefHeight="40.0" prefWidth="152.0" style="-fx-background-color: #22A7F0;">
-                     <children>
-                        <JFXButton prefHeight="40.0" prefWidth="152.0" text="Vybrat složku" textFill="WHITE">
-                           <font>
-                              <Font name="SF Pro Display Medium" size="13.0" />
-                           </font>
-                        </JFXButton>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane layoutX="404.0" layoutY="212.0" prefHeight="40.0" prefWidth="152.0" style="-fx-background-color: #22A7F0;">
+                  <JFXTextField fx:id="repositoryName" layoutX="209.0" layoutY="260.0" prefHeight="27.0" prefWidth="347.0" />
+                  <Label layoutX="47.0" layoutY="265.0" text="GIT repozitář (HTTPS):" />
+                  <AnchorPane layoutX="404.0" layoutY="312.0" prefHeight="27.0" prefWidth="152.0" style="-fx-background-color: #22A7F0;">
                      <children>
                         <JFXButton fx:id="setRepositoryButton" onAction="#setRepositoryButtonClicked" prefHeight="40.0" prefWidth="152.0" text="Nastavit" textFill="WHITE">
                            <font>
@@ -119,7 +108,7 @@
                      </children>
                   </AnchorPane>
                   <JFXTreeTableView fx:id="table" layoutX="6.0" layoutY="14.0" prefHeight="467.0" prefWidth="584.0" />
-                  <Label layoutX="14.0" layoutY="505.0" text="Celkový počet řádků v souborech:" />
+                  <Label fx:id="allFilesLineNoLabel" layoutX="14.0" layoutY="505.0" text="Celkový počet řádků v souborech:" />
                </children></Pane>
          </children>
       </AnchorPane>

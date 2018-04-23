@@ -24,26 +24,8 @@ public class ChangedFile extends RecursiveTreeObject<ChangedFile> implements Ser
      StringProperty version;
      BooleanProperty isJavaFile;
      String URL;
-     StringProperty fileNameShorten;
 
-    public ChangedFile(String dateOfChange, String fileName, String changedLines, String version, boolean isJavaFile, String URL, String fileNameShorten) {
-        //SimpleDateFormat sm = new SimpleDateFormat("dd.MM.yyyy-HH:mm", Locale.GERMANY);
 
-        this.dateOfChange = new SimpleStringProperty(dateOfChange);
-        this.fileName = new SimpleStringProperty(fileName);
-        this.changedLines = new SimpleStringProperty(changedLines.toString());
-        this.version = new SimpleStringProperty(version);
-        this.isJavaFile = new SimpleBooleanProperty(isJavaFile);
-        this.URL = URL;
-        this.fileNameShorten = new SimpleStringProperty(fileNameShorten);
-    }
-
-    public StringProperty getFileNameShortenProperty() {
-        return fileNameShorten;
-    }
-    public void setFileNameShortenProperty(String fileNameShorten){
-        this.fileNameShorten = new SimpleStringProperty(fileNameShorten);
-    }
 
     public ChangedFile() {
     }

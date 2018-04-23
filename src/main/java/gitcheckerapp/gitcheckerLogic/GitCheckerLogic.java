@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +50,14 @@ public class GitCheckerLogic implements IGitcheckerLogic{
 
         return owner;
     }
+
+    public ArrayList<ChangedFile> getCfl() {
+        if(cfl == null){
+            cfl = new ArrayList<>();
+        }
+        return cfl;
+    }
+    
 
     /**
      * Metoda vrací nazev repo dle url
@@ -156,41 +165,103 @@ public class GitCheckerLogic implements IGitcheckerLogic{
      * @throws IOException
      */
     @Override
-    public ArrayList<ChangedFile> getChangedFilesList(String owner, String repoName) throws IOException{
-        ChangedFile fdto;
-        ArrayList<ChangedFile> Lfile = new ArrayList<>();
-        RepositoryCommit rc;
-        List<CommitFile> cf;
+    public ArrayList<ChangedFile> getChangedFilesList(String owner, String repoName) throws IOException, ClassNotFoundException {
 
-        Repository r;
-        r = getUserRepositoryObject(owner, repoName);
-        this.rr = r;
-
-        rc = gcs.getLastRepositoryCommit(r);
-        cf = rc.getFiles();
-
-
-        for(CommitFile cff : cf){
-            fdto = new ChangedFile();
-            fdto.setFileName(cff.getFilename());
-            fdto.setChangedLines(cff.getChanges());
-            fdto.setDateOfChange(rc.getCommit().getAuthor().getDate());
-            fdto.setVersion(rc.getSha());
-            fdto.setURL(getRepositoryPath());
-            if (cff.getFilename().contains(".java")){
-                fdto.setIsJavaFile(true);
-            } else {
-                fdto.setIsJavaFile(false);
+        ArrayList<ChangedFile> changedFilesList;
+        RepositoryCommit rCommit;
+        boolean choice = loadBackup();
+        if(choice == true) { //pokud existuje soubor a neco v nem je
+            if(internetIsConnected() == true){  //pokud je připojen k netu
+                Repository r;
+                r = getUserRepositoryObject(owner, repoName);
+                this.rr = r;
+                String fileVersion;
+                fileVersion = cfl.get(0).getVersion().getValue();
+                System.out.println(fileVersion);
+                rCommit = gcs.getLastRepositoryCommit(r);
+                if(rCommit.getSha().equals(fileVersion)){
+                    //zde se vraci rovnou list z loadu protoze je v souboru aktualni verze commitu
+                    System.out.println("nahravam ze souboru verze se shoduji");
+                    return cfl;
+                } else {
+                    //v tehle vetvi neni potreba zase stahovat všechny soubory, jen dostahovat zbytek
+                    //ale to neumim, takže to zas stahuju celé
+                    changedFilesList = fillListChangedFileFromNet(r);
+                    this.cfl = changedFilesList;
+                    saveBackup(changedFilesList); //vytvori se zaloha protoze doslo k update
+                }
+            } else{
+                //pokud není připojen z netu vracim list z loadu
+                return cfl;
             }
 
-            Lfile.add(fdto);
+        } else {
+            //zde je potreba vse stahnout z netu protože bud soubor neexistuje nebo v nem nic neni
+            Repository r;
+            r = getUserRepositoryObject(owner, repoName);
+            this.rr = r;
 
+            changedFilesList = fillListChangedFileFromNet(r);
+            this.cfl = changedFilesList;
+            saveBackup(changedFilesList); //vytvori se zaloha protoze doslo k update
         }
 
-        this.cfl = Lfile;
-        //saveBackup(Lfile);
-        return Lfile;
+        return changedFilesList;
 
+    }
+
+    /**
+     * Metoda pro nahrani vsech souboru z netu do ArrayListu changedFiles
+     * @param r Repositar pro praci
+     * @return ArrayList changedFile
+     * @throws IOException
+     */
+    public ArrayList<ChangedFile> fillListChangedFileFromNet(Repository r) throws IOException{
+        ChangedFile changedFile;
+        ArrayList<ChangedFile> changedFileList = new ArrayList<>();
+        RepositoryCommit rCommit;
+        List<CommitFile> commitFileList = new ArrayList<>();
+        List<RepositoryCommit> rCommitList;
+
+        rCommitList = gcs.getAllCommits(r);
+        for (RepositoryCommit rc : rCommitList) {
+            RepositoryCommit xy = gcs.getCommit(r, rc.getSha());
+            commitFileList = xy.getFiles();
+            for (CommitFile cf : commitFileList) {
+                changedFile = new ChangedFile();
+                changedFile.setFileName(cf.getFilename());
+                changedFile.setChangedLines(cf.getChanges());
+                changedFile.setDateOfChange(xy.getCommit().getAuthor().getDate());
+                changedFile.setVersion(rc.getSha());
+                changedFile.setURL(getRepositoryPath());
+                String[] bits = cf.getFilename().split("/");
+                String first = "";
+                if (bits.length > 2) {
+                    first = bits[bits.length - 2];
+                }
+                String last = bits[bits.length - 1];
+                changedFile.setFileNameShortenProperty(first + "/" + last);
+
+                if (cf.getFilename().contains(".java")) {
+                    changedFile.setIsJavaFile(true);
+                } else {
+                    changedFile.setIsJavaFile(false);
+                }
+
+                changedFileList.add(changedFile);
+            }
+        }
+        return changedFileList;
+    }
+    public String getURLFromFile(){
+        String url = "";
+        ArrayList<ChangedFile> changedFileList = new ArrayList<>();
+        changedFileList = cfl;
+        for(ChangedFile cf : changedFileList){
+            url = cf.getURL();
+        }
+        System.out.println("toto: " + url);
+        return url;
     }
 
     /**
@@ -219,36 +290,65 @@ public class GitCheckerLogic implements IGitcheckerLogic{
     public void saveBackup(ArrayList<ChangedFile> acf) throws IOException{
         FileOutputStream fos = new FileOutputStream("backup.ser");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
+        StringChangedFile scf;
+        ArrayList<StringChangedFile> ascf = new ArrayList<StringChangedFile>();
         int size = acf.size();
-        oos.writeInt(size);
+        //oos.writeInt(size);
         for(ChangedFile cf : acf){
-            oos.writeObject(cf);
-        }
+            scf = new StringChangedFile(cf.getFileName().getValue(), cf.getDateOfChange().getValue(),
+                    cf.getChangedLines().getValue(), cf.getVersion().getValue(),
+                    cf.getIsJavaFile().getValue(), cf.getURL(), cf.getFileNameShortenProperty().getValue());
+            ascf.add(scf);
 
+        }
+        oos.writeObject(ascf);
         oos.close();
         fos.close();
     }
 
     /**
-     * Metoda pro nahrání dat ze zálohy
-     * @return arraylist changedfile
+     * Metoda pro nahrání dat ze zálohy, rovnou v teto metode nastavuji prom.
+     * Array list changedFile na ten list co vytáhnu
+     * @return Vracim true, pokud soubor existuje a neco tam je
+     * @return false pokud bud neexistuje soubor nebo tam nic neni
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    public  ArrayList<ChangedFile> loadBackup() throws IOException, ClassNotFoundException {
+    public boolean loadBackup() throws IOException, ClassNotFoundException {
         ArrayList<ChangedFile> load = new ArrayList<ChangedFile>();
-        FileInputStream fis = new FileInputStream("backup.ser");
-        ObjectInputStream ois = new ObjectInputStream(fis);
+        File f = new File("backup.ser");
+        boolean res = false;
 
-        int size = ois.readInt();
-        for(int i = 0; i< size; i++) {
-            ChangedFile chf = ((ChangedFile) ois.readObject());
-            load.add(chf);
+        if(f.exists()){
+
+            FileInputStream fis = new FileInputStream(f);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            StringChangedFile scf;
+            ChangedFile cf;
+            ArrayList<StringChangedFile> ascf = ((ArrayList<StringChangedFile>) ois.readObject());
+
+            String URLFromFile = "";
+            //int size = ois.readInt();
+            for(StringChangedFile scff : ascf) {
+                cf = new ChangedFile(scff.dateOfChange, scff.fileName, scff.changedLines, scff.version,
+                        scff.isJavaFile, scff.URL, scff.fileNameShorten);
+
+                URLFromFile = cf.getURL();
+
+                load.add(cf);
+            }
+            ois.close();
+            fis.close();
+            if (load.size() > 1){
+                this.cfl =  load;
+                setRepositoryPath(URLFromFile);
+                res = true;
+            } else {
+                res = false;
+            }
+
         }
-        ois.close();
-        fis.close();
-
-        return load;
+        return res;
     }
 
     @Override
@@ -260,11 +360,6 @@ public class GitCheckerLogic implements IGitcheckerLogic{
     @Override
     public String getRepositoryPath() {
         return this.repUrl;
-    }
-
-    @Override
-    public LocalTime nextDownloadTime() {
-        return null;
     }
 
     /**
@@ -290,7 +385,7 @@ public class GitCheckerLogic implements IGitcheckerLogic{
 
         }
 
-        FileOutputStream out = new FileOutputStream(new File("excel.xlsx")); // file name with path
+        FileOutputStream out = new FileOutputStream(new File(path + "/excel.xlsx")); // file name with path
         workbook.write(out);
         out.close();
 
@@ -330,13 +425,24 @@ public class GitCheckerLogic implements IGitcheckerLogic{
         ArrayList<Integer> res = new ArrayList<>();
         List<CommitFile> cf;
         rc = gcs.getAllCommits(r);
+        Collections.reverse(rc);
+        boolean b = true;
+        int tmp = 0;
         for(RepositoryCommit rcc: rc){
-
             RepositoryCommit xy = gcs.getCommit(r, rcc.getSha());
             cf = xy.getFiles();
+
             for(CommitFile cff : cf){
                 if(cff.getFilename().equals(file.getFileName().getValue())){
-                    res.add(cff.getChanges());
+                    if (b){
+                        b = false;
+                        tmp = cff.getAdditions();
+                        res.add(cff.getAdditions());
+                    } else {
+                        tmp = tmp + cff.getAdditions() - cff.getDeletions();
+                        res.add(tmp);
+                    }
+
                 }
             }
         }
@@ -370,6 +476,12 @@ public class GitCheckerLogic implements IGitcheckerLogic{
 
         gcs.downloadFile(res, lastOne, Path);
     }
+
+    @Override
+    public int getAllFilesLineNo() {
+        return 0;
+        }
+
 
 
 }
